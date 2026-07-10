@@ -1,0 +1,45 @@
+# Development and tooling — not needed on the cluster or in the bundle upload
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Tests
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Linting
+.ruff_cache/
+
+# Frontend source — bundle only the compiled dist
+frontend/node_modules/
+frontend/src/
+frontend/index.html
+frontend/tsconfig.json
+frontend/vite.config.ts
+frontend/package.json
+frontend/package-lock.json
+
+# Docs and local config
+docs/
+.superpowers/
+.claude/
+CLAUDE.md
+*.md
+
+# IDEs
+.idea/
+.vscode/
+.DS_Store
+
+# Secrets
+.env
+.env.*
+secrets/
