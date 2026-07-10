@@ -1,2 +1,15 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@keyframes grid-pan {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 40px;
+  }
+}
+
+.animate-grid-pan {
+  animation: grid-pan 8s linear infinite;
+}
