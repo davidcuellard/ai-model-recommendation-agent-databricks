@@ -14,7 +14,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@testing-library/react": ["./node_modules/@testing-library/react"],
+      "vitest": ["./node_modules/vitest/dist/index.d.ts"]
+    }
   },
   "include": ["src", "../tests/frontend"]
 }
