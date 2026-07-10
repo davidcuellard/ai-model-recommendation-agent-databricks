@@ -37,6 +37,7 @@ vi.mock('../../frontend/src/pages/ChatPage', () => ({
 import { App } from '../../frontend/src/App'
 import { HeroSection } from '../../frontend/src/components/landing/HeroSection'
 import { ProblemSection } from '../../frontend/src/components/landing/ProblemSection'
+import { WhySection } from '../../frontend/src/components/landing/WhySection'
 
 describe('App routing', () => {
   beforeEach(() => {
@@ -105,5 +106,14 @@ describe('ProblemSection', () => {
     expect(screen.getByText(/Too many models to evaluate manually/i)).toBeDefined()
     expect(screen.getByText(/Pricing, context length/i)).toBeDefined()
     expect(screen.getByText(/No single model is best/i)).toBeDefined()
+  })
+})
+
+describe('WhySection', () => {
+  it('renders all three benefit cards', () => {
+    render(<WhySection />)
+    expect(screen.getByText('Grounded in live data')).toBeDefined()
+    expect(screen.getByText('Subtask decomposition')).toBeDefined()
+    expect(screen.getByText('Instant recommendations')).toBeDefined()
   })
 })
