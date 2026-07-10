@@ -89,3 +89,37 @@ async def test_stream_response_skips_none_content():
     data_events = [json.loads(e[6:]) for e in events if e.startswith("data: ")]
     tokens = [d["token"] for d in data_events if "token" in d]
     assert tokens == ["World"]
+
+
+def test_health_endpoint():
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    client = TestClient(app)
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_chat_endpoint_returns_stream():
+    from fastapi.testclient import TestClient
+
+    async def fake_stream():
+        chunk = MagicMock()
+        chunk.choices = [MagicMock()]
+        chunk.choices[0].delta.content = "Hi"
+        yield chunk
+
+    with patch("app.chat.query_vector_search", return_value=[]):
+        with patch("app.chat.openrouter_client") as mock_client:
+            mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
+
+            from app.main import app
+            client = TestClient(app)
+            with client.stream("POST", "/api/chat",
+                               json={"messages": [{"role": "user", "content": "test"}]}) as resp:
+                assert resp.status_code == 200
+                assert "text/event-stream" in resp.headers["content-type"]
+                content = resp.read().decode()
+    assert "Hi" in content
+    assert '"done": true' in content
