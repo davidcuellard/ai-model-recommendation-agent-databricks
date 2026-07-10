@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import patch, MagicMock
 
 from app.retrieval import query_vector_search
@@ -52,7 +51,14 @@ def test_query_passes_correct_args(monkeypatch):
 
         mock_wc.vector_search_indexes.query_index.assert_called_once_with(
             index_name="cat.schema.idx",
-            columns=["id", "name", "description", "context_length", "pricing_input", "pricing_output"],
+            columns=[
+                "id",
+                "name",
+                "description",
+                "context_length",
+                "pricing_input",
+                "pricing_output",
+            ],
             query_text="test",
             num_results=3,
         )

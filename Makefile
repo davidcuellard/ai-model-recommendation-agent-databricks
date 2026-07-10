@@ -6,12 +6,12 @@ setup:
 
 dev:
 	@trap 'kill %1 %2 2>/dev/null; exit' INT; \
-	uvicorn services.backend.app.main:app --reload --port 8000 & \
+	cd services/backend && uvicorn app.main:app --reload --port 8000 & \
 	cd frontend && npm run dev & \
 	wait
 
 dev-backend:
-	uvicorn services.backend.app.main:app --reload --port 8000
+	cd services/backend && uvicorn app.main:app --reload --port 8000
 
 dev-frontend:
 	cd frontend && npm run dev

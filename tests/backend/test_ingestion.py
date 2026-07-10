@@ -1,5 +1,3 @@
-import pytest
-from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
 
 from jobs.ingestion.ingest import fetch_models, normalize_model, sync_vector_search_index

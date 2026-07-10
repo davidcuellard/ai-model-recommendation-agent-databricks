@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { streamChat, type Message } from '../services/api'
 
 export interface PlanItem {
@@ -29,6 +29,10 @@ export function useChat() {
   const [error, setError] = useState<string | null>(null)
   const [recommendation, setRecommendation] = useState<RecommendationPlan | null>(null)
   const abortRef = useRef<(() => void) | null>(null)
+
+  useEffect(() => () => {
+    abortRef.current?.()
+  }, [])
 
   const sendMessage = useCallback(
     (content: string) => {

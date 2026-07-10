@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/components/chatinput.tsx","./src/components/chatmessage.tsx","./src/components/errorbanner.tsx","./src/components/recommendationcard.tsx","./src/hooks/usechat.ts","./src/pages/chatpage.tsx","./src/services/api.ts","../tests/frontend/usechat.test.ts"],"version":"5.6.3"}

@@ -24,10 +24,22 @@ def test_build_context_formats_model_info():
 
 def test_build_context_multiple_chunks_separated():
     chunks = [
-        {"id": "a/model-1", "name": "M1", "description": "", "context_length": 4096,
-         "pricing_input": 0.0, "pricing_output": 0.0},
-        {"id": "b/model-2", "name": "M2", "description": "", "context_length": 8192,
-         "pricing_input": 0.0, "pricing_output": 0.0},
+        {
+            "id": "a/model-1",
+            "name": "M1",
+            "description": "",
+            "context_length": 4096,
+            "pricing_input": 0.0,
+            "pricing_output": 0.0,
+        },
+        {
+            "id": "b/model-2",
+            "name": "M2",
+            "description": "",
+            "context_length": 8192,
+            "pricing_input": 0.0,
+            "pricing_output": 0.0,
+        },
     ]
     context = build_context(chunks)
     assert "a/model-1" in context
@@ -54,6 +66,7 @@ async def test_stream_response_yields_tokens_then_done():
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 
             from app.chat import stream_response
+
             events = []
             async for event in stream_response([{"role": "user", "content": "test"}]):
                 events.append(event)
@@ -82,6 +95,7 @@ async def test_stream_response_skips_none_content():
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 
             from app.chat import stream_response
+
             events = []
             async for event in stream_response([{"role": "user", "content": "test"}]):
                 events.append(event)
@@ -115,9 +129,11 @@ def test_chat_endpoint_returns_stream():
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 
             from app.main import app
+
             client = TestClient(app)
-            with client.stream("POST", "/api/chat",
-                               json={"messages": [{"role": "user", "content": "test"}]}) as resp:
+            with client.stream(
+                "POST", "/api/chat", json={"messages": [{"role": "user", "content": "test"}]}
+            ) as resp:
                 assert resp.status_code == 200
                 assert "text/event-stream" in resp.headers["content-type"]
                 content = resp.read().decode()
