@@ -4,6 +4,17 @@ import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useCountUp } from '../../frontend/src/hooks/useCountUp'
 
+vi.mock('framer-motion', () => ({
+  motion: new Proxy({} as Record<string, unknown>, {
+    get: (_: Record<string, unknown>, tag: string) =>
+      function MotionEl({ children, ...props }: Record<string, unknown>) {
+        return React.createElement(tag, props, children as React.ReactNode)
+      },
+  }),
+  useInView: () => true,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => children,
+}))
+
 // Stub heavy components so this test focuses on routing only
 vi.mock('../../frontend/src/pages/LandingPage', () => ({
   LandingPage: () => <div data-testid="landing-page">Landing</div>,
@@ -13,6 +24,7 @@ vi.mock('../../frontend/src/pages/ChatPage', () => ({
 }))
 
 import { App } from '../../frontend/src/App'
+import { HeroSection } from '../../frontend/src/components/landing/HeroSection'
 
 describe('App routing', () => {
   beforeEach(() => {
@@ -54,5 +66,19 @@ describe('useCountUp', () => {
     })
     expect(result.current).toBe(100)
     vi.useRealTimers()
+  })
+})
+
+describe('HeroSection', () => {
+  it('renders headline words and CTA link to /app', () => {
+    render(
+      <MemoryRouter>
+        <HeroSection />
+      </MemoryRouter>,
+    )
+    expect(screen.getByText('Find')).toBeDefined()
+    expect(screen.getByText('Instantly.')).toBeDefined()
+    const cta = screen.getByRole('link', { name: /launch app/i })
+    expect(cta.getAttribute('href')).toBe('/app')
   })
 })
