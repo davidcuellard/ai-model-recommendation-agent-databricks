@@ -4,6 +4,17 @@ import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useCountUp } from '../../frontend/src/hooks/useCountUp'
 
+// Polyfill IntersectionObserver for tests
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() {
+    return []
+  }
+  unobserve() {}
+} as any
+
 vi.mock('framer-motion', () => ({
   motion: new Proxy({} as Record<string, unknown>, {
     get: (_: Record<string, unknown>, tag: string) =>
@@ -25,6 +36,7 @@ vi.mock('../../frontend/src/pages/ChatPage', () => ({
 
 import { App } from '../../frontend/src/App'
 import { HeroSection } from '../../frontend/src/components/landing/HeroSection'
+import { ProblemSection } from '../../frontend/src/components/landing/ProblemSection'
 
 describe('App routing', () => {
   beforeEach(() => {
@@ -80,5 +92,18 @@ describe('HeroSection', () => {
     expect(screen.getByText('Instantly.')).toBeDefined()
     const cta = screen.getByRole('link', { name: /launch app/i })
     expect(cta.getAttribute('href')).toBe('/app')
+  })
+})
+
+describe('ProblemSection', () => {
+  it('renders all three pain point items', () => {
+    render(
+      <MemoryRouter>
+        <ProblemSection />
+      </MemoryRouter>,
+    )
+    expect(screen.getByText(/Too many models to evaluate manually/i)).toBeDefined()
+    expect(screen.getByText(/Pricing, context length/i)).toBeDefined()
+    expect(screen.getByText(/No single model is best/i)).toBeDefined()
   })
 })
