@@ -11,7 +11,7 @@ openrouter_client = AsyncOpenAI(
     base_url="https://openrouter.ai/api/v1",
 )
 
-OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-haiku-4-5 ")
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-haiku-4-5")
 
 SYSTEM_PROMPT = """\
 You are an AI model recommendation agent grounded in live data from the OpenRouter catalog.
