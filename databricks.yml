@@ -1,0 +1,67 @@
+bundle:
+  name: rag-agent
+
+variables:
+  unity_catalog:
+    description: Unity Catalog name
+    default: main
+  unity_schema:
+    description: Unity Schema name
+    default: rag_agent
+  unity_table:
+    description: Delta table name for OpenRouter models
+    default: openrouter_models
+  vs_endpoint_name:
+    description: Vector Search endpoint name
+  vs_index_name:
+    description: Fully qualified Vector Search index name (catalog.schema.index)
+
+resources:
+  apps:
+    rag-agent:
+      name: rag-agent
+      source_code_path: ./
+      resources:
+        - name: OPENROUTER_API_KEY
+          secret:
+            scope: my-secret-scope
+            key: OPENROUTER_API_KEY
+            permission: READ
+        - name: DATABRICKS_HOST
+          secret:
+            scope: my-secret-scope
+            key: DATABRICKS_HOST
+            permission: READ
+        - name: VECTOR_SEARCH_ENDPOINT_NAME
+          secret:
+            scope: my-secret-scope
+            key: VECTOR_SEARCH_ENDPOINT_NAME
+            permission: READ
+        - name: VECTOR_SEARCH_INDEX_NAME
+          secret:
+            scope: my-secret-scope
+            key: VECTOR_SEARCH_INDEX_NAME
+            permission: READ
+
+  jobs:
+    openrouter_ingestion:
+      name: openrouter-ingestion
+      tasks:
+        - task_key: ingest
+          python_script_task:
+            python_file: jobs/ingestion/ingest.py
+          new_cluster:
+            spark_version: "15.4.x-scala2.12"
+            node_type_id: i3.xlarge
+            num_workers: 1
+            spark_env_vars:
+              UNITY_CATALOG: ${var.unity_catalog}
+              UNITY_SCHEMA: ${var.unity_schema}
+              UNITY_TABLE: ${var.unity_table}
+              VECTOR_SEARCH_ENDPOINT_NAME: ${var.vs_endpoint_name}
+              VECTOR_SEARCH_INDEX_NAME: ${var.vs_index_name}
+          libraries:
+            - pypi:
+                package: httpx>=0.27.0
+            - pypi:
+                package: databricks-sdk>=0.33.0
