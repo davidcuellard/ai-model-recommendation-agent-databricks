@@ -7,7 +7,7 @@ def test_fetch_models_returns_list():
     mock_data = {
         "data": [
             {
-                "id": "anthropic/claude-sonnet-4-6",
+                "id": "anthropic/claude-haiku-4-5 ",
                 "name": "Claude Sonnet",
                 "description": "A powerful model",
                 "context_length": 200000,
@@ -27,7 +27,7 @@ def test_fetch_models_returns_list():
         result = fetch_models()
 
     assert len(result) == 1
-    assert result[0]["id"] == "anthropic/claude-sonnet-4-6"
+    assert result[0]["id"] == "anthropic/claude-haiku-4-5 "
 
 
 def test_normalize_model_extracts_all_fields():

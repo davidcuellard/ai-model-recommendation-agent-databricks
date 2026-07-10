@@ -29,7 +29,7 @@ This is a recommendation system, not a multi-model executor. The agent calls onl
 ```
 
 Columns derived from the API response:
-- `id` — model identifier (e.g. `anthropic/claude-sonnet-4-6`)
+- `id` — model identifier (e.g. `anthropic/claude-haiku-4-5 `)
 - `name` — display name
 - `description` — provider-supplied description
 - `context_length` — max context window (tokens)
@@ -42,7 +42,7 @@ Columns derived from the API response:
 
 Built over `openrouter_models`. Each row is one model. The indexed text column is a synthesized chunk:
 
-> *"Model: claude-sonnet-4-6 by Anthropic. Description: [description]. Context window: 200,000 tokens. Input cost: $3/1M tokens, Output cost: $15/1M tokens."*
+> *"Model: claude-haiku-4-5  by Anthropic. Description: [description]. Context window: 200,000 tokens. Input cost: $3/1M tokens, Output cost: $15/1M tokens."*
 
 The index is a **Delta Sync Index** (managed by Databricks Vector Search), triggered to sync after each ingestion run.
 
@@ -127,7 +127,7 @@ POST /api/chat (messages[])
   │     system: instructions to decompose task + produce JSON plan
   │     context: retrieved model chunks
   │     history: full messages[]
-  ├─ OpenRouter SSE call (claude-sonnet-4-6)
+  ├─ OpenRouter SSE call (claude-haiku-4-5 )
   └─ Proxy SSE tokens → client
 ```
 
@@ -145,7 +145,7 @@ Claude is instructed (via system prompt) to end every response with a JSON block
   "plan": [
     {
       "subtask": "chatbot logic",
-      "model": "claude-sonnet-4-6",
+      "model": "claude-haiku-4-5 ",
       "provider": "Anthropic via OpenRouter",
       "reason": "agentic coding, tool calling"
     },

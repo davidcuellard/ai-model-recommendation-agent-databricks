@@ -27,6 +27,11 @@ resources:
             scope: my-secret-scope
             key: OPENROUTER_API_KEY
             permission: READ
+        - name: OPENROUTER_MODEL
+          secret:
+            scope: my-secret-scope
+            key: OPENROUTER_MODEL
+            permission: READ
         - name: DATABRICKS_HOST
           secret:
             scope: my-secret-scope

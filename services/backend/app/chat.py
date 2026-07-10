@@ -11,6 +11,8 @@ openrouter_client = AsyncOpenAI(
     base_url="https://openrouter.ai/api/v1",
 )
 
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "anthropic/claude-haiku-4-5 ")
+
 SYSTEM_PROMPT = """\
 You are an AI model recommendation agent grounded in live data from the OpenRouter catalog.
 
@@ -68,7 +70,7 @@ async def stream_response(messages: list[dict]) -> AsyncGenerator[str, None]:
     api_messages = [{"role": "system", "content": system_content}] + messages
 
     stream = await openrouter_client.chat.completions.create(
-        model="anthropic/claude-sonnet-4-6",
+        model=OPENROUTER_MODEL,
         messages=api_messages,
         stream=True,
     )

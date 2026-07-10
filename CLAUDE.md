@@ -44,7 +44,7 @@ The ingestion job does a **full refresh** (source is authoritative) and triggers
 messages[] → extract latest user message
            → retrieval.py: query Vector Search → top-5 model chunks
            → chat.py: build prompt (system + context + history)
-           → OpenRouter SSE call (claude-sonnet-4-6)
+           → OpenRouter SSE call (claude-haiku-4-5 )
            → proxy SSE tokens → client
 ```
 

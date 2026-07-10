@@ -23,7 +23,7 @@ def _make_mock_response(rows: list[list]) -> MagicMock:
 
 def test_query_returns_formatted_dicts(monkeypatch):
     monkeypatch.setenv("VECTOR_SEARCH_INDEX_NAME", "cat.schema.idx")
-    row = ["anthropic/claude-sonnet-4-6", "Claude Sonnet", "Powerful", 200000, 0.000003, 0.000015]
+    row = ["anthropic/claude-haiku-4-5 ", "Claude Sonnet", "Powerful", 200000, 0.000003, 0.000015]
     mock_response = _make_mock_response([row])
 
     with patch("app.retrieval.WorkspaceClient") as mock_wc_cls:
@@ -34,7 +34,7 @@ def test_query_returns_formatted_dicts(monkeypatch):
         results = query_vector_search("build a chatbot")
 
     assert len(results) == 1
-    assert results[0]["id"] == "anthropic/claude-sonnet-4-6"
+    assert results[0]["id"] == "anthropic/claude-haiku-4-5 "
     assert results[0]["pricing_input"] == 0.000003
 
 

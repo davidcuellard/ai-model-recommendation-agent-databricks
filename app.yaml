@@ -11,6 +11,8 @@ command:
 env:
   - name: OPENROUTER_API_KEY
     valueFrom: "OPENROUTER_API_KEY"
+  - name: OPENROUTER_MODEL
+    valueFrom: "OPENROUTER_MODEL"
   - name: DATABRICKS_HOST
     valueFrom: "DATABRICKS_HOST"
   - name: VECTOR_SEARCH_ENDPOINT_NAME

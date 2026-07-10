@@ -8,7 +8,7 @@ from app.chat import build_context
 def test_build_context_formats_model_info():
     chunks = [
         {
-            "id": "anthropic/claude-sonnet-4-6",
+            "id": "anthropic/claude-haiku-4-5 ",
             "name": "Claude Sonnet",
             "description": "Powerful model for complex tasks",
             "context_length": 200000,
@@ -17,7 +17,7 @@ def test_build_context_formats_model_info():
         }
     ]
     context = build_context(chunks)
-    assert "anthropic/claude-sonnet-4-6" in context
+    assert "anthropic/claude-haiku-4-5 " in context
     assert "200000" in context
     assert "3.0000" in context  # $3/1M input
 
