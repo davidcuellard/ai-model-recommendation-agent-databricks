@@ -4,7 +4,7 @@ from collections.abc import AsyncGenerator
 
 from openai import AsyncOpenAI
 
-from app.retrieval import query_vector_search
+from app.retrieval import query_vector_search as _query_vector_search
 
 openrouter_client = AsyncOpenAI(
     api_key=os.environ.get("OPENROUTER_API_KEY", "placeholder"),
@@ -38,7 +38,7 @@ When a user describes what they want to build:
 
 Base all recommendations on the model context below. If the context is empty, use your \
 training knowledge but explicitly note that you are not grounded in live catalog data.
-
+{company_instruction}
 Model context from OpenRouter catalog:
 {context}
 """
@@ -61,11 +61,21 @@ def build_context(chunks: list[dict]) -> str:
     return "\n\n---\n\n".join(parts)
 
 
-async def stream_response(messages: list[dict]) -> AsyncGenerator[str, None]:
+async def stream_response(
+    messages: list[dict], companies: list[str] | None = None
+) -> AsyncGenerator[str, None]:
     user_query = messages[-1]["content"] if messages else ""
-    chunks = query_vector_search(user_query)
+    chunks = _query_vector_search(user_query, companies=companies or None)
     context = build_context(chunks)
-    system_content = SYSTEM_PROMPT.format(context=context)
+    if companies:
+        company_list = ", ".join(companies)
+        company_instruction = (
+            f"\nIMPORTANT: The user has filtered to these providers only: {company_list}. "
+            "Only recommend models from these providers.\n"
+        )
+    else:
+        company_instruction = ""
+    system_content = SYSTEM_PROMPT.format(context=context, company_instruction=company_instruction)
 
     api_messages = [{"role": "system", "content": system_content}] + messages
 

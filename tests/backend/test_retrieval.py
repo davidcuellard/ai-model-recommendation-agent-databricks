@@ -4,7 +4,15 @@ from app.retrieval import query_vector_search
 
 
 def _make_mock_response(rows: list[list]) -> MagicMock:
-    col_names = ["id", "name", "description", "context_length", "pricing_input", "pricing_output"]
+    col_names = [
+        "id",
+        "name",
+        "description",
+        "context_length",
+        "pricing_input",
+        "pricing_output",
+        "provider",
+    ]
     cols = [MagicMock() for _ in col_names]
     for col, name in zip(cols, col_names):
         col.name = name
@@ -13,17 +21,25 @@ def _make_mock_response(rows: list[list]) -> MagicMock:
     manifest.columns = cols
 
     result = MagicMock()
-    result.manifest = manifest
     result.data_array = rows if rows else None
 
     response = MagicMock()
     response.result = result
+    response.manifest = manifest
     return response
 
 
 def test_query_returns_formatted_dicts(monkeypatch):
     monkeypatch.setenv("VECTOR_SEARCH_INDEX_NAME", "cat.schema.idx")
-    row = ["anthropic/claude-haiku-4-5 ", "Claude Sonnet", "Powerful", 200000, 0.000003, 0.000015]
+    row = [
+        "anthropic/claude-haiku-4-5 ",
+        "Claude Sonnet",
+        "Powerful",
+        200000,
+        0.000003,
+        0.000015,
+        "anthropic",
+    ]
     mock_response = _make_mock_response([row])
 
     with patch("app.retrieval.WorkspaceClient") as mock_wc_cls:
@@ -58,9 +74,11 @@ def test_query_passes_correct_args(monkeypatch):
                 "context_length",
                 "pricing_input",
                 "pricing_output",
+                "provider",
             ],
             query_text="test",
             num_results=3,
+            filters_json=None,
         )
 
 

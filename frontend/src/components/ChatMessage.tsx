@@ -1,3 +1,4 @@
+import Markdown from 'react-markdown'
 import type { Message } from '../services/api'
 import type { RecommendationPlan } from '../hooks/useChat'
 import { RecommendationCard } from './RecommendationCard'
@@ -32,8 +33,12 @@ export function ChatMessage({ message, isCurrentlyStreaming, recommendation }: P
               <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.15s]" />
               <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
             </div>
+          ) : isUser ? (
+            <p className="text-sm leading-relaxed">{displayContent}</p>
           ) : (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed">{displayContent}</p>
+            <div className="prose prose-sm max-w-none text-gray-900 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+              <Markdown>{displayContent}</Markdown>
+            </div>
           )}
         </div>
         {recommendation && <RecommendationCard plan={recommendation} />}

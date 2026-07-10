@@ -23,12 +23,26 @@ function parseRecommendation(content: string): RecommendationPlan | null {
   }
 }
 
-export function useChat() {
-  const [messages, setMessages] = useState<Message[]>([])
+interface UseChatOptions {
+  initialMessages?: Message[]
+  selectedCompanies?: string[]
+  onSave?: (messages: Message[], recommendation: RecommendationPlan | null) => void
+}
+
+export function useChat(options: UseChatOptions = {}) {
+  const { initialMessages, selectedCompanies, onSave } = options
+
+  const [messages, setMessages] = useState<Message[]>(initialMessages ?? [])
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [recommendation, setRecommendation] = useState<RecommendationPlan | null>(null)
   const abortRef = useRef<(() => void) | null>(null)
+
+  // Keep a ref to the latest onSave so callbacks don't capture a stale version
+  const onSaveRef = useRef(onSave)
+  useEffect(() => {
+    onSaveRef.current = onSave
+  }, [onSave])
 
   useEffect(() => () => {
     abortRef.current?.()
@@ -41,10 +55,13 @@ export function useChat() {
       const userMessage: Message = { role: 'user', content: content.trim() }
       const nextMessages = [...messages, userMessage]
 
-      setMessages([...nextMessages, { role: 'assistant', content: '' }])
+      const withPlaceholder = [...nextMessages, { role: 'assistant' as const, content: '' }]
+      setMessages(withPlaceholder)
       setIsStreaming(true)
       setError(null)
       setRecommendation(null)
+
+      onSaveRef.current?.(withPlaceholder, null)
 
       abortRef.current = streamChat(
         nextMessages,
@@ -55,6 +72,7 @@ export function useChat() {
               ...updated[updated.length - 1],
               content: updated[updated.length - 1].content + token,
             }
+            onSaveRef.current?.(updated, null)
             return updated
           })
         },
@@ -64,6 +82,7 @@ export function useChat() {
             const lastContent = prev[prev.length - 1]?.content ?? ''
             const plan = parseRecommendation(lastContent)
             if (plan) setRecommendation(plan)
+            onSaveRef.current?.(prev, plan)
             return prev
           })
         },
@@ -72,12 +91,15 @@ export function useChat() {
           setIsStreaming(false)
           setMessages((prev) => {
             const last = prev[prev.length - 1]
-            return last?.role === 'assistant' && !last.content ? prev.slice(0, -1) : prev
+            const next = last?.role === 'assistant' && !last.content ? prev.slice(0, -1) : prev
+            onSaveRef.current?.(next, null)
+            return next
           })
         },
+        selectedCompanies,
       )
     },
-    [messages, isStreaming],
+    [messages, isStreaming, selectedCompanies],
   )
 
   const clearError = useCallback(() => setError(null), [])

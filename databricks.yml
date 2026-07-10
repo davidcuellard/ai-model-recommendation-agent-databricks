@@ -4,7 +4,7 @@ bundle:
 variables:
   unity_catalog:
     description: Unity Catalog name
-    default: main
+    default: dcue_demo
   unity_schema:
     description: Unity Schema name
     default: rag_agent
@@ -13,8 +13,12 @@ variables:
     default: openrouter_models
   vs_endpoint_name:
     description: Vector Search endpoint name
+    default: rag-agent-endpoint
   vs_index_name:
     description: Fully qualified Vector Search index name (catalog.schema.index)
+    default: dcue_demo.rag_agent.openrouter_models_index
+  cluster_id:
+    description: Existing cluster ID for the ingestion job
 
 resources:
   apps:
@@ -24,27 +28,27 @@ resources:
       resources:
         - name: OPENROUTER_API_KEY
           secret:
-            scope: my-secret-scope
+            scope: dcue-demo-scope
             key: OPENROUTER_API_KEY
             permission: READ
         - name: OPENROUTER_MODEL
           secret:
-            scope: my-secret-scope
+            scope: dcue-demo-scope
             key: OPENROUTER_MODEL
             permission: READ
         - name: DATABRICKS_HOST
           secret:
-            scope: my-secret-scope
+            scope: dcue-demo-scope
             key: DATABRICKS_HOST
             permission: READ
         - name: VECTOR_SEARCH_ENDPOINT_NAME
           secret:
-            scope: my-secret-scope
+            scope: dcue-demo-scope
             key: VECTOR_SEARCH_ENDPOINT_NAME
             permission: READ
         - name: VECTOR_SEARCH_INDEX_NAME
           secret:
-            scope: my-secret-scope
+            scope: dcue-demo-scope
             key: VECTOR_SEARCH_INDEX_NAME
             permission: READ
 
@@ -53,18 +57,15 @@ resources:
       name: openrouter-ingestion
       tasks:
         - task_key: ingest
-          python_script_task:
+          spark_python_task:
             python_file: jobs/ingestion/ingest.py
-          new_cluster:
-            spark_version: "15.4.x-scala2.12"
-            node_type_id: i3.xlarge
-            num_workers: 1
-            spark_env_vars:
-              UNITY_CATALOG: ${var.unity_catalog}
-              UNITY_SCHEMA: ${var.unity_schema}
-              UNITY_TABLE: ${var.unity_table}
-              VECTOR_SEARCH_ENDPOINT_NAME: ${var.vs_endpoint_name}
-              VECTOR_SEARCH_INDEX_NAME: ${var.vs_index_name}
+            parameters:
+              - ${var.unity_catalog}
+              - ${var.unity_schema}
+              - ${var.unity_table}
+              - ${var.vs_endpoint_name}
+              - ${var.vs_index_name}
+          existing_cluster_id: ${var.cluster_id}
           libraries:
             - pypi:
                 package: httpx>=0.27.0

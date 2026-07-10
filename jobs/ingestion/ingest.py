@@ -1,4 +1,4 @@
-import os
+import sys
 import httpx
 from datetime import datetime, timezone
 from databricks.sdk import WorkspaceClient
@@ -15,14 +15,17 @@ def fetch_models() -> list[dict]:
 
 def normalize_model(model: dict) -> dict:
     pricing = model.get("pricing") or {}
+    model_id = model.get("id", "")
+    provider = model_id.split("/")[0] if "/" in model_id else ""
     return {
-        "id": model.get("id", ""),
+        "id": model_id,
         "name": model.get("name", ""),
         "description": model.get("description", ""),
         "context_length": model.get("context_length"),
         "pricing_input": float(pricing.get("prompt") or 0),
         "pricing_output": float(pricing.get("completion") or 0),
         "top_provider": bool(model.get("top_provider")),
+        "provider": provider,
         "ingested_at": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -41,10 +44,7 @@ def sync_vector_search_index(index_name: str) -> None:
 
 
 def main() -> None:
-    catalog = os.environ["UNITY_CATALOG"]
-    schema = os.environ["UNITY_SCHEMA"]
-    table = os.environ["UNITY_TABLE"]
-    index_name = os.environ["VECTOR_SEARCH_INDEX_NAME"]
+    catalog, schema, table, _endpoint, index_name = sys.argv[1:6]
 
     print("Fetching models from OpenRouter...")
     raw_models = fetch_models()

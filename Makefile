@@ -1,4 +1,4 @@
-.PHONY: setup dev dev-backend dev-frontend test test-backend test-frontend lint format build deploy
+.PHONY: setup dev dev-backend dev-frontend test test-backend test-frontend lint format build deploy ingest
 
 setup:
 	@[ -f .env ] || cp .env.example .env
@@ -6,13 +6,13 @@ setup:
 	cd frontend && npm install
 
 dev:
-	@trap 'kill %1 %2 2>/dev/null; exit' INT; \
+	@set -a && . ./.env && set +a && trap 'kill %1 %2 2>/dev/null; exit' INT; \
 	cd services/backend && uv run uvicorn app.main:app --reload --port 8000 & \
 	cd frontend && npm run dev & \
 	wait
 
 dev-backend:
-	cd services/backend && uv run uvicorn app.main:app --reload --port 8000
+	@set -a && . ./.env && set +a && cd services/backend && uv run uvicorn app.main:app --reload --port 8000
 
 dev-frontend:
 	cd frontend && npm run dev
@@ -36,4 +36,9 @@ build:
 	cd frontend && npm run build
 
 deploy:
-	databricks bundle deploy
+	@set -a && . ./.env && set +a && BUNDLE_VAR_cluster_id=$$DATABRICKS_CLUSTER_ID databricks bundle deploy
+	databricks workspace import-dir frontend/dist /Workspace/Users/david.cuellar@factored.ai/.bundle/rag-agent/default/files/frontend/dist --overwrite
+	databricks apps deploy rag-agent --source-code-path /Workspace/Users/david.cuellar@factored.ai/.bundle/rag-agent/default/files
+
+ingest:
+	@set -a && . ./.env && set +a && BUNDLE_VAR_cluster_id=$$DATABRICKS_CLUSTER_ID databricks bundle run openrouter_ingestion

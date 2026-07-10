@@ -35,6 +35,10 @@ export default defineConfig({
         find: /^react-dom$/,
         replacement: path.resolve(__dirname, 'node_modules/react-dom'),
       },
+      {
+        find: /^react-router-dom$/,
+        replacement: path.resolve(__dirname, 'node_modules/react-router-dom'),
+      },
     ],
   },
 })
