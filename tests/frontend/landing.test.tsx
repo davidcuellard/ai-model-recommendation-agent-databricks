@@ -38,6 +38,7 @@ import { App } from '../../frontend/src/App'
 import { HeroSection } from '../../frontend/src/components/landing/HeroSection'
 import { ProblemSection } from '../../frontend/src/components/landing/ProblemSection'
 import { WhySection } from '../../frontend/src/components/landing/WhySection'
+import { HowItWorksSection } from '../../frontend/src/components/landing/HowItWorksSection'
 
 describe('App routing', () => {
   beforeEach(() => {
@@ -115,5 +116,15 @@ describe('WhySection', () => {
     expect(screen.getByText('Grounded in live data')).toBeDefined()
     expect(screen.getByText('Subtask decomposition')).toBeDefined()
     expect(screen.getByText('Instant recommendations')).toBeDefined()
+  })
+})
+
+describe('HowItWorksSection', () => {
+  it('renders all 4 steps', () => {
+    render(<HowItWorksSection />)
+    expect(screen.getAllByText('Describe your task')).toBeDefined()
+    expect(screen.getAllByText('Agent decomposes')).toBeDefined()
+    expect(screen.getAllByText('Vector Search retrieves')).toBeDefined()
+    expect(screen.getAllByText('Recommendation delivered')).toBeDefined()
   })
 })
