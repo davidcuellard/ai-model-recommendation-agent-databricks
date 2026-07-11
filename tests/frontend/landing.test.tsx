@@ -59,7 +59,7 @@ import { HowItWorksSection } from '../../frontend/src/components/landing/HowItWo
 
 describe('App routing', () => {
   beforeEach(() => {
-    vi.restoreAllMocks()
+    vi.clearAllMocks()
   })
 
   it('renders LandingPage at /', () => {

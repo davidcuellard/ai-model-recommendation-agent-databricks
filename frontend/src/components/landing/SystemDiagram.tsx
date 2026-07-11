@@ -10,7 +10,7 @@ const topNodes = [
   { id: 'openrouter', label: 'OpenRouter API', badge: 'Source',        x: 20,  y: 55, stroke: '#3b82f6' },
   { id: 'ingest',    label: 'Ingestion Job',   badge: 'Databricks',    x: 210, y: 55, stroke: DB_RED },
   { id: 'delta',     label: 'Delta Table',     badge: 'Unity Catalog', x: 400, y: 55, stroke: DB_RED },
-  { id: 'vs',        label: 'AI Search Index', badge: 'Databricks',    x: 590, y: 55, stroke: DB_RED },
+  { id: 'vs',        label: 'Vector Search',   badge: 'Databricks',    x: 590, y: 55, stroke: DB_RED },
 ]
 
 const bottomNodes = [
