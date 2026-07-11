@@ -26,7 +26,7 @@ const cards = [
       </svg>
     ),
     title: 'Instant recommendations',
-    body: 'Vector Search over model embeddings returns relevant candidates in milliseconds.',
+    body: 'Databricks AI Search over model embeddings returns the most relevant model candidates in milliseconds.',
   },
 ]
 

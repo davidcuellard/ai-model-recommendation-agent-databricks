@@ -13,8 +13,8 @@ const steps = [
   },
   {
     n: 3,
-    label: 'Vector Search retrieves',
-    detail: 'Top-5 model chunks from the live catalog',
+    label: 'AI Search retrieves',
+    detail: 'Databricks AI Search returns top-5 model chunks from the live catalog',
   },
   {
     n: 4,

@@ -26,8 +26,11 @@ export function HeroSection() {
           transition={{ duration: 0.5 }}
           className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-gray-800/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-blue-400"
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-          School Project · Real World Architecture
+          {/* Databricks logomark */}
+          <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7.5V12l10 5.5L22 12V7.5L12 2zm0 2.31L20.08 9 12 13.69 3.92 9 12 4.31zM3.92 13.31L12 18l8.08-4.69V10.5L12 15.19 3.92 10.5v2.81z" />
+          </svg>
+          Powered by Databricks · Real World Architecture
         </motion.div>
 
         {/* Headline */}
@@ -53,7 +56,8 @@ export function HeroSection() {
           className="mx-auto mb-10 max-w-2xl text-lg text-gray-400 md:text-xl"
         >
           Describe what you want to build. The agent decomposes it into subtasks and
-          recommends the best AI model for each — grounded in live OpenRouter data.
+          recommends the best AI model for each — grounded in live OpenRouter data, stored
+          in Delta Lake, governed by Unity Catalog, and retrieved via Databricks AI Search.
         </motion.p>
 
         {/* CTA */}
@@ -71,6 +75,18 @@ export function HeroSection() {
               Launch App →
             </motion.button>
           </Link>
+
+          {/* Databricks stack strip */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+            {['Delta Lake', 'Unity Catalog', 'AI Search Index', 'Databricks Apps'].map((label) => (
+              <span
+                key={label}
+                className="rounded-full border border-gray-700 bg-gray-800/60 px-3 py-1 text-xs font-medium text-gray-400"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
         </motion.div>
       </div>
 

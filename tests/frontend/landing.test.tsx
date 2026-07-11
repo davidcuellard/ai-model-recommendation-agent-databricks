@@ -159,26 +159,6 @@ describe('FooterCTA (mocked)', () => {
   })
 })
 
-// Re-mock the section components to avoid re-rendering animations
-vi.mock('../../frontend/src/components/landing/HeroSection', () => ({
-  HeroSection: () => <div data-testid="hero" />,
-}))
-vi.mock('../../frontend/src/components/landing/ProblemSection', () => ({
-  ProblemSection: () => <div data-testid="problem" />,
-}))
-vi.mock('../../frontend/src/components/landing/WhySection', () => ({
-  WhySection: () => <div data-testid="why" />,
-}))
-vi.mock('../../frontend/src/components/landing/HowItWorksSection', () => ({
-  HowItWorksSection: () => <div data-testid="how" />,
-}))
-vi.mock('../../frontend/src/components/landing/SystemDiagram', () => ({
-  SystemDiagram: () => <div data-testid="diagram" />,
-}))
-vi.mock('../../frontend/src/components/landing/FooterCTA', () => ({
-  FooterCTA: () => <div data-testid="footer" />,
-}))
-
 import { LandingPage } from '../../frontend/src/pages/LandingPage'
 
 describe('LandingPage', () => {
