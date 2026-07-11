@@ -1,11 +1,10 @@
 import { useState, useCallback, useEffect } from 'react'
-import type { Message } from '../services/api'
-import type { RecommendationPlan } from './useChat'
+import type { UIMessage, RecommendationPlan } from './useChat'
 import type { ChatSession } from '../types/chat'
 
 const STORAGE_KEY = 'rag_sessions'
 const ACTIVE_KEY = 'rag_active_session'
-const MAX_SESSIONS = 5
+const MAX_SESSIONS = 10
 
 function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
@@ -107,7 +106,7 @@ export function useSessions() {
   }, [])
 
   const updateSession = useCallback(
-    (id: string, messages: Message[], recommendation: RecommendationPlan | null) => {
+    (id: string, messages: UIMessage[], recommendation: RecommendationPlan | null) => {
       setSessions((prev) =>
         prev.map((s) => {
           if (s.id !== id) return s

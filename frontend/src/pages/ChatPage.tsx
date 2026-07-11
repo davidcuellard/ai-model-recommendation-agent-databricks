@@ -3,7 +3,7 @@ import { useChat } from '../hooks/useChat'
 import { useSessions } from '../hooks/useSessions'
 import { getProviders } from '../services/api'
 import type { Message } from '../services/api'
-import type { RecommendationPlan } from '../hooks/useChat'
+import type { RecommendationPlan, UIMessage } from '../hooks/useChat'
 import { ChatMessage } from '../components/ChatMessage'
 import { ChatInput } from '../components/ChatInput'
 import { ErrorBanner } from '../components/ErrorBanner'
@@ -13,11 +13,11 @@ import { ProviderFilter } from '../components/ProviderFilter'
 interface ChatAreaProps {
   initialMessages: Message[]
   selectedCompanies: string[]
-  onSave: (messages: Message[], recommendation: RecommendationPlan | null) => void
+  onSave: (messages: UIMessage[], recommendation: RecommendationPlan | null) => void
 }
 
 function ChatArea({ initialMessages, selectedCompanies, onSave }: ChatAreaProps) {
-  const { messages, isStreaming, error, recommendation, sendMessage, clearError } = useChat({
+  const { messages, isStreaming, error, sendMessage, clearError } = useChat({
     initialMessages,
     selectedCompanies,
     onSave,
@@ -41,8 +41,8 @@ function ChatArea({ initialMessages, selectedCompanies, onSave }: ChatAreaProps)
               message={msg}
               isCurrentlyStreaming={isStreaming && i === messages.length - 1 && msg.role === 'assistant'}
               recommendation={
-                i === messages.length - 1 && msg.role === 'assistant' && !isStreaming
-                  ? recommendation
+                msg.role === 'assistant' && !(isStreaming && i === messages.length - 1)
+                  ? (msg.recommendation ?? null)
                   : null
               }
             />
@@ -72,7 +72,7 @@ export function ChatPage() {
   }, [])
 
   const handleSave = useCallback(
-    (messages: Message[], recommendation: RecommendationPlan | null) => {
+    (messages: UIMessage[], recommendation: RecommendationPlan | null) => {
       updateSession(activeId, messages, recommendation)
     },
     [activeId, updateSession],

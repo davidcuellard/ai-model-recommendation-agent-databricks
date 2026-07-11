@@ -1,10 +1,9 @@
-import type { Message } from '../services/api'
-import type { RecommendationPlan } from '../hooks/useChat'
+import type { UIMessage, RecommendationPlan } from '../hooks/useChat'
 
 export interface ChatSession {
   id: string
   title: string
-  messages: Message[]
+  messages: UIMessage[]
   recommendation: RecommendationPlan | null
   createdAt: number
 }
