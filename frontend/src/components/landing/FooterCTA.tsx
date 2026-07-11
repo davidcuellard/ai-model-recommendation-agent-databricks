@@ -48,6 +48,20 @@ export function FooterCTA() {
         >
           Built on Databricks · Powered by OpenRouter · Grounded in live data
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          className="mt-6 flex items-center justify-center gap-1.5"
+        >
+          <img
+            src="https://cdn.prod.website-files.com/673e584365dc85b813c0e0d7/686ed19a686120b0466805a2_Web_Favicon.png"
+            alt="Factored"
+            className="h-4 w-4 opacity-40"
+          />
+          <span className="text-xs text-gray-600">Factored Labs</span>
+        </motion.div>
       </div>
     </section>
   )

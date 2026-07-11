@@ -13,3 +13,7 @@
 .animate-grid-pan {
   animation: grid-pan 8s linear infinite;
 }
+
+button {
+  cursor: pointer;
+}

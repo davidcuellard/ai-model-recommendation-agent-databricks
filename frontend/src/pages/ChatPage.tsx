@@ -90,10 +90,22 @@ export function ChatPage() {
 
       <div className="flex min-w-0 flex-1 flex-col bg-[#0f172a]">
         <header className="border-b border-gray-800 bg-gray-900 px-6 py-4">
-          <h1 className="text-xl font-semibold text-gray-50">Model Recommendation Agent</h1>
-          <p className="mt-0.5 text-sm text-gray-400">
-            Describe what you want to build — get grounded model recommendations
-          </p>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-xl font-semibold text-gray-50">Model Recommendation Agent</h1>
+              <p className="mt-0.5 text-sm text-gray-400">
+                Describe what you want to build — get grounded model recommendations
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <img
+                src="https://cdn.prod.website-files.com/673e584365dc85b813c0e0d7/686ed19a686120b0466805a2_Web_Favicon.png"
+                alt="Factored"
+                className="h-4 w-4 opacity-40"
+              />
+              <span className="text-xs text-gray-600">Factored Labs</span>
+            </div>
+          </div>
           <ProviderFilter
             providers={providers}
             selected={selectedProviders}
