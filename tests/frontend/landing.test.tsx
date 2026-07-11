@@ -128,3 +128,20 @@ describe('HowItWorksSection', () => {
     expect(screen.getAllByText('Recommendation delivered')).toBeDefined()
   })
 })
+
+import { SystemDiagram } from '../../frontend/src/components/landing/SystemDiagram'
+
+describe('SystemDiagram', () => {
+  it('renders Architecture heading and all 8 node labels', () => {
+    render(<SystemDiagram />)
+    expect(screen.getByText('Architecture')).toBeDefined()
+    expect(screen.getByText('OpenRouter API')).toBeDefined()
+    expect(screen.getByText('Ingestion Job')).toBeDefined()
+    expect(screen.getByText('Delta Table')).toBeDefined()
+    expect(screen.getByText('Vector Search')).toBeDefined()
+    expect(screen.getByText('User')).toBeDefined()
+    expect(screen.getByText('FastAPI Backend')).toBeDefined()
+    expect(screen.getByText('Claude Haiku')).toBeDefined()
+    expect(screen.getByText('Recommendation')).toBeDefined()
+  })
+})
