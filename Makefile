@@ -36,9 +36,10 @@ build:
 	cd frontend && npm run build
 
 deploy:
-	@set -a && . ./.env && set +a && BUNDLE_VAR_cluster_id=$$DATABRICKS_CLUSTER_ID databricks bundle deploy
-	databricks workspace import-dir frontend/dist /Workspace/Users/david.cuellar@factored.ai/.bundle/rag-agent/default/files/frontend/dist --overwrite
-	databricks apps deploy rag-agent --source-code-path /Workspace/Users/david.cuellar@factored.ai/.bundle/rag-agent/default/files
+	@set -a && . ./.env && set +a && \
+	BUNDLE_VAR_cluster_id=$$DATABRICKS_CLUSTER_ID databricks bundle deploy && \
+	databricks workspace import-dir frontend/dist $$DATABRICKS_WORKSPACE_PATH/.bundle/rag-agent/default/files/frontend/dist --overwrite && \
+	databricks apps deploy rag-agent --source-code-path $$DATABRICKS_WORKSPACE_PATH/.bundle/rag-agent/default/files
 
 ingest:
 	@set -a && . ./.env && set +a && BUNDLE_VAR_cluster_id=$$DATABRICKS_CLUSTER_ID databricks bundle run openrouter_ingestion

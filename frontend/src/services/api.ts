@@ -61,6 +61,5 @@ export function streamChat(
 export async function getProviders(): Promise<string[]> {
   const response = await fetch('/api/providers')
   if (!response.ok) return []
-  const data = (await response.json()) as { providers: string[] }
-  return data.providers
+  return (await response.json()) as string[]
 }

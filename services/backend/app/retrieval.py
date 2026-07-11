@@ -46,7 +46,7 @@ def get_all_providers() -> list[str]:
         index_name=index_name,
         columns=["provider"],
         query_text="model",
-        num_results=200,
+        num_results=500,
     )
 
     if not (response.result and response.result.data_array):
@@ -54,5 +54,4 @@ def get_all_providers() -> list[str]:
 
     column_names = [col.name for col in response.manifest.columns]
     rows = [dict(zip(column_names, row)) for row in response.result.data_array]
-    providers = sorted({r["provider"] for r in rows if r.get("provider")})
-    return providers
+    return sorted({r["provider"] for r in rows if r.get("provider")})
