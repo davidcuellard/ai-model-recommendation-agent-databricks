@@ -61,7 +61,7 @@ async def test_stream_response_yields_tokens_then_done():
     async def fake_stream():
         yield mock_chunk
 
-    with patch("app.chat.query_vector_search", return_value=[]):
+    with patch("app.chat._query_vector_search", return_value=[]):
         with patch("app.chat.openrouter_client") as mock_client:
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 
@@ -90,7 +90,7 @@ async def test_stream_response_skips_none_content():
         yield chunk_with_none
         yield chunk_with_text
 
-    with patch("app.chat.query_vector_search", return_value=[]):
+    with patch("app.chat._query_vector_search", return_value=[]):
         with patch("app.chat.openrouter_client") as mock_client:
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 
@@ -124,7 +124,7 @@ def test_chat_endpoint_returns_stream():
         chunk.choices[0].delta.content = "Hi"
         yield chunk
 
-    with patch("app.chat.query_vector_search", return_value=[]):
+    with patch("app.chat._query_vector_search", return_value=[]):
         with patch("app.chat.openrouter_client") as mock_client:
             mock_client.chat.completions.create = AsyncMock(return_value=fake_stream())
 

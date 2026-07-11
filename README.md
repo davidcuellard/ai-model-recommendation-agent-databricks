@@ -38,6 +38,8 @@ This installs Python deps (`uv sync --extra dev`) and frontend deps (`npm instal
 
 ### Running locally
 
+Ensure `.env` exists (created automatically by `make setup` from `.env.example`). The dev commands load it automatically.
+
 ```bash
 # Backend only (port 8000)
 make dev-backend
@@ -56,6 +58,14 @@ make test          # backend + frontend
 make test-backend  # pytest (15 tests)
 make test-frontend # vitest (7 tests)
 ```
+
+### Ingestion
+
+```bash
+make ingest   # run openrouter_ingestion job on the existing cluster
+```
+
+Requires `DATABRICKS_CLUSTER_ID` in `.env`.
 
 ### Lint / Format
 
@@ -105,7 +115,9 @@ The ingestion job (`jobs/ingestion/ingest.py`) runs on demand:
 3. Overwrites the Delta table `{catalog}.{schema}.openrouter_models` (full refresh)
 4. Triggers a Vector Search Delta Sync Index sync
 
-Run via: **Databricks Jobs UI** or `databricks bundle run openrouter_ingestion`.
+The job runs on an **existing cluster** (passed via the `cluster_id` bundle variable). Catalog, schema, table, and index are passed as positional CLI arguments — not environment variables.
+
+Run via: `make ingest`, **Databricks Jobs UI**, or `databricks bundle run openrouter_ingestion`.
 
 ---
 
@@ -122,15 +134,16 @@ Run via: **Databricks Jobs UI** or `databricks bundle run openrouter_ingestion`.
 
 > **Do not set `DATABRICKS_TOKEN`** — Databricks Apps injects OAuth credentials automatically. Adding a PAT causes "more than one authorization method configured".
 
-### Ingestion job (set in `databricks.yml` job task config)
+### Local dev / deployment (`.env`)
 
 | Variable | Purpose |
 |---|---|
-| `UNITY_CATALOG` | Target catalog |
-| `UNITY_SCHEMA` | Target schema |
-| `UNITY_TABLE` | Target table name |
-| `VECTOR_SEARCH_ENDPOINT_NAME` | VS endpoint to sync |
-| `VECTOR_SEARCH_INDEX_NAME` | VS index to sync |
+| `DATABRICKS_HOST` | Workspace URL for `databricks` CLI |
+| `DATABRICKS_CLUSTER_ID` | Existing cluster used by the ingestion job |
+
+### Ingestion job (bundle variables set in `databricks.yml`)
+
+The ingestion job receives catalog, schema, table, endpoint, and index as positional CLI arguments — not environment variables. These are sourced from bundle variables (`unity_catalog`, `unity_schema`, `unity_table`, `vs_endpoint_name`, `vs_index_name`) defined in `databricks.yml`.
 
 ---
 
@@ -140,9 +153,11 @@ Run via: **Databricks Jobs UI** or `databricks bundle run openrouter_ingestion`.
 # Build frontend first
 make build
 
-# Deploy app + ingestion job to Databricks
-databricks bundle deploy
+# Deploy app + ingestion job to Databricks, then push app files
+make deploy
 ```
+
+`make deploy` runs `databricks bundle deploy` (uploads bundle resources) followed by `databricks apps deploy` (pushes the app source files to the workspace). It reads `DATABRICKS_CLUSTER_ID` from `.env` to bind the ingestion job to an existing cluster.
 
 After deploying, grant the app's service principal Unity Catalog permissions:
 

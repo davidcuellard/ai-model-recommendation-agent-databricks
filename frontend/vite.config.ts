@@ -21,6 +21,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    typecheck: { tsconfig: './tsconfig.test.json' },
     include: ['src/**/*.{test,spec}.{ts,tsx}', '../tests/frontend/**/*.{test,spec}.{ts,tsx}'],
     alias: [
       {
@@ -34,6 +35,10 @@ export default defineConfig({
       {
         find: /^react-dom$/,
         replacement: path.resolve(__dirname, 'node_modules/react-dom'),
+      },
+      {
+        find: /^react-router-dom$/,
+        replacement: path.resolve(__dirname, 'node_modules/react-router-dom'),
       },
     ],
   },

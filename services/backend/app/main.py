@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app.chat import stream_response
+from app.retrieval import get_all_providers
 
 app = FastAPI(title="RAG Agent")
 
@@ -17,6 +18,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[Message]
+    companies: list[str] = []
 
 
 @app.get("/api/health")
@@ -24,11 +26,16 @@ def health() -> dict:
     return {"status": "ok"}
 
 
+@app.get("/api/providers")
+async def providers() -> list[str]:
+    return get_all_providers()
+
+
 @app.post("/api/chat")
 async def chat(request: ChatRequest) -> StreamingResponse:
     messages = [{"role": m.role, "content": m.content} for m in request.messages]
     return StreamingResponse(
-        stream_response(messages),
+        stream_response(messages, companies=request.companies or None),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

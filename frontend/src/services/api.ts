@@ -8,6 +8,7 @@ export function streamChat(
   onToken: (token: string) => void,
   onDone: () => void,
   onError: (error: string) => void,
+  companies?: string[],
 ): () => void {
   const controller = new AbortController()
 
@@ -16,7 +17,7 @@ export function streamChat(
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages }),
+        body: JSON.stringify({ messages, companies: companies ?? [] }),
         signal: controller.signal,
       })
 
@@ -55,4 +56,10 @@ export function streamChat(
   })()
 
   return () => controller.abort()
+}
+
+export async function getProviders(): Promise<string[]> {
+  const response = await fetch('/api/providers')
+  if (!response.ok) return []
+  return (await response.json()) as string[]
 }

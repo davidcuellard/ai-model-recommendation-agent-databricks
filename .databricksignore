@@ -6,7 +6,6 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .eggs/
-dist/
 build/
 
 # Tests
