@@ -21,6 +21,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    typecheck: { tsconfig: './tsconfig.test.json' },
     include: ['src/**/*.{test,spec}.{ts,tsx}', '../tests/frontend/**/*.{test,spec}.{ts,tsx}'],
     alias: [
       {
