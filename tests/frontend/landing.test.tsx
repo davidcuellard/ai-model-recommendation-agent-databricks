@@ -145,3 +145,17 @@ describe('SystemDiagram', () => {
     expect(screen.getByText('Recommendation')).toBeDefined()
   })
 })
+
+import { FooterCTA } from '../../frontend/src/components/landing/FooterCTA'
+
+describe('FooterCTA', () => {
+  it('renders CTA link pointing to /app', () => {
+    render(
+      <MemoryRouter>
+        <FooterCTA />
+      </MemoryRouter>,
+    )
+    const link = screen.getByRole('link', { name: /launch app/i })
+    expect(link.getAttribute('href')).toBe('/app')
+  })
+})
