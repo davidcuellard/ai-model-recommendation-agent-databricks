@@ -24,19 +24,19 @@ export function ChatMessage({ message, isCurrentlyStreaming, recommendation }: P
           className={`rounded-2xl px-4 py-3 ${
             isUser
               ? 'rounded-br-sm bg-blue-600 text-white'
-              : 'rounded-bl-sm border border-gray-200 bg-white text-gray-900 shadow-sm'
+              : 'rounded-bl-sm border border-gray-700 bg-gray-800 text-gray-100'
           }`}
         >
           {isCurrentlyStreaming && !displayContent ? (
             <div className="flex items-center gap-1.5 py-1">
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.3s]" />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.15s]" />
-              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500 [animation-delay:-0.3s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500 [animation-delay:-0.15s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-gray-500" />
             </div>
           ) : isUser ? (
             <p className="text-sm leading-relaxed">{displayContent}</p>
           ) : (
-            <div className="prose prose-sm max-w-none text-gray-900 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
+            <div className="prose prose-sm prose-invert max-w-none text-gray-100 [&>*:first-child]:mt-0 [&>*:last-child]:mb-0">
               <Markdown>{displayContent}</Markdown>
             </div>
           )}
